@@ -38,18 +38,24 @@ int main(int argc, const char *argv[])
     // - Contraction Hierarchies (CH): requires extract+contract pre-processing
     // - Multi-Level Dijkstra (MLD): requires extract+partition+customize pre-processing
     //
-    // config.algorithm = EngineConfig::Algorithm::CH;
-    config.algorithm = EngineConfig::Algorithm::MLD;
+    config.algorithm = EngineConfig::Algorithm::CH;
+    // config.algorithm = EngineConfig::Algorithm::MLD;
 
     // Routing machine with several services (such as Route, Table, Nearest, Trip, Match)
     const OSRM osrm{config};
 
     // The following shows how to use the Route service; configure this service
-    RouteParameters params;
+    RouteParameters params(false,
+                           false,
+                           osrm::engine::api::RouteParameters::AnnotationsType::Nodes,
+                           osrm::engine::api::RouteParameters::GeometriesType::GeoJSON,
+                           osrm::engine::api::RouteParameters::OverviewType::Full,
+                           false
+                           );
 
-    // Route in monaco
-    params.coordinates.push_back({util::FloatLongitude{7.419758}, util::FloatLatitude{43.731142}});
-    params.coordinates.push_back({util::FloatLongitude{7.419505}, util::FloatLatitude{43.736825}});
+    // Route
+    params.coordinates.push_back({util::FloatLongitude{103.9880}, util::FloatLatitude{1.3556}});
+    params.coordinates.push_back({util::FloatLongitude{103.9554}, util::FloatLatitude{1.3562}});
 
     // Response is in JSON format
     engine::api::ResultT result = json::Object();
@@ -66,6 +72,22 @@ int main(int argc, const char *argv[])
         auto &route = routes.values.at(0).get<json::Object>();
         const auto distance = route.values["distance"].get<json::Number>().value;
         const auto duration = route.values["duration"].get<json::Number>().value;
+
+        json::Object &geometry = route.values["geometry"].get<json::Object>();
+
+        std::string type = geometry.values["type"].get<json::String>().value;
+        std::cout << type << std::endl;
+
+        json::Array &coordinates = geometry.values["coordinates"].get<json::Array>();
+
+        std::cout << std::setprecision(10);
+        for (int index = 0; index < coordinates.values.size(); index++) {
+            std::vector<json::Value> pair = coordinates.values.at(index).get<json::Array>().values;
+            double x = pair[0].get<json::Number>().value;
+            double y = pair[1].get<json::Number>().value;
+            std::cout << x << " , " << y << std::endl;
+        }
+
 
         // Warn users if extract does not contain the default coordinates from above
         if (distance == 0 || duration == 0)
