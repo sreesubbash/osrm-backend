@@ -38,22 +38,22 @@ struct Parameters
 {
     // Alternative paths candidate via nodes are taken from overlapping search spaces.
     // Overlapping by a third guarantees us taking candidate nodes "from the middle".
-    double kSearchSpaceOverlapFactor = 1.33;
+    double kSearchSpaceOverlapFactor = 1.8; // 1.33;
     // Unpack n-times more candidate paths to run high-quality checks on.
     // Unpacking paths yields higher chance to find good alternatives but is also expensive.
-    unsigned kAlternativesToUnpackFactor = 2;
+    unsigned kAlternativesToUnpackFactor = 4000; // 2;
     // Alternative paths length requirement (stretch).
     // At most 25% longer then the shortest path.
-    double kAtMostLongerBy = 0.25;
+    double kAtMostLongerBy = 0.3; // 0.25;
     // Alternative paths similarity requirement (sharing).
     // At least 25% different than the shortest path.
-    double kAtMostSameBy = 0.75;
+    double kAtMostSameBy = 0.7; // 0.75;
     // Alternative paths are still reasonable around the via node candidate (local optimality).
     // At least optimal around 10% sub-paths around the via node candidate.
-    double kAtLeastOptimalAroundViaBy = 0.1;
+    double kAtLeastOptimalAroundViaBy = 0.025; // 0.1;
     // Alternative paths similarity requirement (sharing) based on cells.
     // At least 5% different than the shortest path.
-    double kCellsAtMostSameBy = 0.95;
+    double kCellsAtMostSameBy = 1.0; // 0.95;
 };
 
 // Represents a via middle node where forward (from s) and backward (from t)

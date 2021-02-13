@@ -54,6 +54,9 @@ Thumbs.db
 /test/data/corech
 /test/data/mld
 /cmake/postinst
+cmake-build-debug/
+cmake-build-release/
+example/cmake-build-debug/
 
 # Eclipse related files #
 #########################
